@@ -1,38 +1,38 @@
-A group of macros for a standard Apache setup using libapache2-mod-macro
+# A group of macros for a standard Apache setup using libapache2-mod-macro
 
-The following instructions are for a Debian based distribution.
+# The following instructions are for a Debian based distribution.
 
-To use these macros install libapache2-mod-macro, then put this macros.d
-directory at /etc/apache2/macros.d
+# To use these macros install libapache2-mod-macro, then put this macros.d
+# directory at /etc/apache2/macros.d
 
-Create a /etc/apache2/mods-available/macro.conf file, which should just be:
+# Create a /etc/apache2/mods-available/macro.conf file, which should just be:
 
-Include macro.d/
+# Include macro.d/
 
-Then:
+# Then:
 
-sudo a2enmod macro
-sudo apache2ctl configtest
-sudo apache2ctl graceful #if all well above
+# sudo a2enmod macro
+# sudo apache2ctl configtest
+# sudo apache2ctl graceful #if all well above
 
-You should then be able to use the following style of nomenclature in vhost
-files:
+# You should then be able to use the following style of nomenclature in vhost
+# files:
 
-# Redirect all aliases to the canonical site to avoid SSL warnings and improve
-# SEO 
-Use Redirect website.com 80 http://www.website.com
-Use Redirect website.com 443 https://www.website.com
+## Redirect all aliases to the canonical site to avoid SSL warnings and improve
+## SEO 
+# Use Redirect website.com 80 http://www.website.com
+# Use Redirect website.com 443 https://www.website.com
  
-# Standard VHost
-<VirtualHost *:80>
-Use BeginVHost www.website.com serveradmin@email.com username-on-server
-Use AWStats username-on-server https://www.website.com
-</VirtualHost>
+## Standard VHost
+# <VirtualHost *:80>
+# Use BeginVHost www.website.com serveradmin@email.com username-on-server
+# Use AWStats username-on-server https://www.website.com
+# </VirtualHost>
  
-# SSL VHost
-<VirtualHost *:443>
-Use BeginVHost www.website.com serveradmin@email.com username-on-server
-Use SSL certificate.crt private.key
-Use AWStats username-on-server https://www.website.com
-Use AuthBasic username-on-server relative_path_to_AWStats "Enter the password to view statistics"
-</VirtualHost>
+## SSL VHost
+# <VirtualHost *:443>
+# Use BeginVHost www.website.com serveradmin@email.com username-on-server
+# Use SSL certificate.crt private.key
+# Use AWStats username-on-server https://www.website.com
+# Use AuthBasic username-on-server relative_path_to_AWStats "Enter the password to view statistics"
+# </VirtualHost>
