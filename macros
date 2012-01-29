@@ -1,0 +1,96 @@
+# Macro definition for redirecting an alias to canonical host
+# $alias - url without http
+# $port - relevant port
+# $url - url to redirect to including http:// or https://
+
+<Macro Redirect $alias $port $url>
+    <VirtualHost *:$port>
+           ServerName $alias
+           RedirectMatch permanent ^/(.*) $url/$1
+    </VirtualHost>
+</Macro>
+
+# Macro definition for a generic virtual host to be used within the
+# <VirtualHost .... > </VirtualHost> block
+# Assumes each user has their own log directory
+# $fqdn - the fully qualified domain name for the site
+# $admin_email - ServerAdmin email address
+# $user - the username of the site owner on the server
+<Macro BeginVHost $fqdn $admin_email $user>
+        ServerAdmin $admin_email
+        ServerName $fqdn
+        DocumentRoot /home/$user/public_html/
+        <Directory />
+                Options FollowSymLinks
+                AllowOverride None
+        </Directory>
+
+        <Directory /home/$user/public_html>
+                Options Indexes FollowSymLinks MultiViews
+                AllowOverride All
+                Order allow,deny
+                allow from all
+        </Directory>
+
+        ErrorLog /home/$user/log/apache2/error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+
+        CustomLog /home/$user/log/apache2/combined.log combined
+
+</Macro>
+
+# Macro definition for a basic SSL setup where CA Certificate is already on
+# the server at /etc/ssl/certs/ and cert/key are at /etc/apache2/ssl/
+# $certificate - the public key filename
+# $key - the private key filename
+<Macro SSL $certificate $key>
+        # Base SSL configuration
+        SSLEngine on
+        SSLProtocol all -SSLv2
+        SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM
+
+        SSLCertificateFile /etc/apache2/ssl/$certificate
+        SSLCertificateKeyFile /etc/apache2/ssl/$key
+        SSLCACertificatePath /etc/ssl/certs/
+
+        # SSL Engine Options:
+        #SSLOptions +FakeBasicAuth +ExportCertData +StrictRequire
+        <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                SSLOptions +StdEnvVars
+        </FilesMatch>
+        <Directory /usr/lib/cgi-bin>
+                SSLOptions +StdEnvVars
+        </Directory>
+
+        #   SSL Protocol Adjustments:
+        BrowserMatch "MSIE [2-6]" \
+                nokeepalive ssl-unclean-shutdown \
+                downgrade-1.0 force-response-1.0
+        # MSIE 7 and newer should be able to use keepalive
+        BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown>
+</Macro>
+
+# Macro for basic AWStats configuration accessible at base_url/statistics/
+# $user - the username of the site owner on the server
+# $base_url - the website's base_url for accessing awstats
+<Macro AWStats $user $base_url>
+    <Directory /home/$user/public_html/statistics/>
+        RedirectMatch /statistics/?$ $base_url/awstats/awstats.pl
+    </Directory>
+</Macro>
+
+# Macro for AuthBasic
+# $user - the username of the site owner on the server
+# $dir - the directory to be protected
+# $message - the message to be displayed when requesting credentials
+<Macro AuthBasic $user $dir $message>
+    <Directory "/home/$user/$dir>
+        AuthType Basic
+        AuthName "$message"
+        AuthUserFile /home/$user/etc/htpasswd
+        Require valid-user
+    </Directory>
+</Macro>
