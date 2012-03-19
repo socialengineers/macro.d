@@ -32,7 +32,7 @@
 ## SSL VHost
 # <VirtualHost *:443>
 # Use BeginVHost www.website.com serveradmin@email.com username-on-server
-# Use SSL certificate.crt private.key
+# Use SSL certificate.crt private.key chainfile.pem
 # Use AWStats username-on-server https://www.website.com
 # Use AuthBasic username-on-server relative_path_to_AWStats "Enter the password to view statistics"
 # </VirtualHost>

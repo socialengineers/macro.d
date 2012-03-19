@@ -46,6 +46,7 @@
 # the server at /etc/ssl/certs/ and cert/key are at /etc/apache2/ssl/
 # $certificate - the public key filename
 # $key - the private key filename
+# $chainfile - the concatenated chain for the certificate
 <Macro SSL $certificate $key $chainfile>
         # Base SSL configuration
         SSLEngine on
