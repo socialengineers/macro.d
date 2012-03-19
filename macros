@@ -46,7 +46,7 @@
 # the server at /etc/ssl/certs/ and cert/key are at /etc/apache2/ssl/
 # $certificate - the public key filename
 # $key - the private key filename
-<Macro SSL $certificate $key>
+<Macro SSL $certificate $key $chainfile>
         # Base SSL configuration
         SSLEngine on
         SSLProtocol all -SSLv2
@@ -54,6 +54,7 @@
 
         SSLCertificateFile /etc/apache2/ssl/$certificate
         SSLCertificateKeyFile /etc/apache2/ssl/$key
+        SSLCertificateChainFile /etc/ssl/certs/$chainfile
         SSLCACertificatePath /etc/ssl/certs/
 
         # SSL Engine Options:
