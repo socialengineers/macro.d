@@ -1,3 +1,17 @@
+# Macro definition for redirecting a non-ssl host to the ssl host
+# $fqdn - ServerName to redirect excluding http://
+# $alias - ServerAlias to redirect excluding http://
+
+<Macro RedirectSSL $fqdn $alias>
+    <VirtualHost *:80>
+           ServerName $fqdn
+           ServerAlias $alias
+           RewriteEngine On
+           RewriteCond %{HTTPS} !=on
+           RewriteRule .* https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
+    </VirtualHost>
+</Macro>
+
 # Macro definition for redirecting an alias to canonical host
 # $alias - url without http
 # $port - relevant port
